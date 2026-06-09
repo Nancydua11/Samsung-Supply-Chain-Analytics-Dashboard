@@ -1,0 +1,671 @@
+// ============================================================
+// SAMSUNG SUPPLY CHAIN & LOGISTICS DASHBOARD
+// ALL DAX MEASURES — Copy-Paste Ready for Power BI
+// ============================================================
+// TABLE NAMES (match your Power BI model):
+//   fact_sales | fact_procurement | fact_production
+//   fact_inventory | fact_shipment
+//   dim_customer | dim_product | dim_supplier
+//   dim_facility | dim_date
+// ============================================================
+
+
+// ============================================================
+// ██████╗  EXECUTIVE OVERVIEW
+// ============================================================
+
+Total Revenue =
+SUMX(
+    fact_sales,
+    fact_sales[net_revenue]
+)
+
+Total Profit =
+SUMX(
+    fact_sales,
+    fact_sales[profit]
+)
+
+Profit Margin % =
+DIVIDE(
+    [Total Profit],
+    [Total Revenue],
+    0
+)
+
+Total Cost (Sales) =
+SUMX(
+    fact_sales,
+    fact_sales[total_cost]
+)
+
+Cost Ratio % =
+DIVIDE(
+    [Total Procurement Cost],
+    [Total Revenue],
+    0
+) * 100
+
+Discount Rate % =
+DIVIDE(
+    SUMX(fact_sales, fact_sales[discount_amount]),
+    SUMX(fact_sales, fact_sales[gross_revenue]),
+    0
+) * 100
+
+Total Gross Revenue =
+SUMX(fact_sales, fact_sales[gross_revenue])
+
+Total Discount Amount =
+SUMX(fact_sales, fact_sales[discount_amount])
+
+
+// ============================================================
+// ██████╗  SUPPLIER / PROCUREMENT
+// ============================================================
+
+Total Procurement Cost =
+SUMX(
+    fact_procurement,
+    fact_procurement[total_cost]
+)
+
+Total Order Quantity =
+SUM(fact_procurement[order_quantity])
+
+Average Unit Cost =
+AVERAGE(fact_procurement[unit_cost])
+
+Average Lead Time (Days) =
+AVERAGE(fact_procurement[lead_time_days])
+
+Supplier Lead Time (Days) =
+AVERAGEX(
+    SUMMARIZE(
+        fact_procurement,
+        fact_procurement[supplier_id],
+        "AvgLead", AVERAGE(fact_procurement[lead_time_days])
+    ),
+    [AvgLead]
+)
+
+Procurement Cost Growth MoM =
+VAR CurrentMonth =
+    CALCULATE(
+        [Total Procurement Cost],
+        DATESMTD(dim_date[date])
+    )
+VAR PrevMonth =
+    CALCULATE(
+        [Total Procurement Cost],
+        DATEADD(DATESMTD(dim_date[date]), -1, MONTH)
+    )
+RETURN
+    DIVIDE(CurrentMonth - PrevMonth, PrevMonth, 0)
+
+Total Procurement Cost by Month =
+CALCULATE(
+    [Total Procurement Cost],
+    ALLEXCEPT(dim_date, dim_date[month_name], dim_date[year])
+)
+
+Delivery Performance Score =
+AVERAGE(fact_shipment[delivery_performance_score])
+
+Avg Quality Score =
+AVERAGE(fact_procurement[quality_score])
+
+Procurement Revenue Ratio =
+DIVIDE([Total Procurement Cost], [Total Revenue], 0) * 100
+
+
+// ============================================================
+// ██████╗  PRODUCTION
+// ============================================================
+
+Total Units Produced =
+SUM(fact_production[quantity_produced])
+
+Total Defective Units =
+SUM(fact_production[defective_units])
+
+Average Defect Rate % =
+AVERAGE(fact_production[defect_rate_pct])
+
+Quality Yield % =
+(1 - DIVIDE([Total Defective Units], [Total Units Produced], 0)) * 100
+
+Production Efficiency % =
+[Quality Yield %]
+
+Production Growth MoM =
+VAR CurrentMonth =
+    CALCULATE(
+        [Total Units Produced],
+        DATESMTD(dim_date[date])
+    )
+VAR PrevMonth =
+    CALCULATE(
+        [Total Units Produced],
+        DATEADD(DATESMTD(dim_date[date]), -1, MONTH)
+    )
+RETURN
+    DIVIDE(CurrentMonth - PrevMonth, PrevMonth, 0)
+
+Total Units Produced by Facility =
+CALCULATE(
+    [Total Units Produced],
+    ALLEXCEPT(dim_facility, dim_facility[facility_name])
+)
+
+Total Defective by Category =
+CALCULATE(
+    [Total Defective Units],
+    ALLEXCEPT(dim_product, dim_product[category])
+)
+
+Avg Defect Rate by Month =
+CALCULATE(
+    AVERAGE(fact_production[defect_rate_pct]),
+    ALLEXCEPT(dim_date, dim_date[month_name])
+)
+
+
+// ============================================================
+// ██████╗  INVENTORY
+// ============================================================
+
+Current Stock Level =
+SUM(fact_inventory[stock_level])
+
+Total Safety Stock =
+SUM(fact_inventory[safety_stock_level])
+
+Total Reorder Point =
+SUM(fact_inventory[reorder_point])
+
+Inventory Value =
+SUM(fact_inventory[inventory_value])
+
+Inventory Turnover Rate =
+DIVIDE(
+    [Total Cost (Sales)],
+    [Inventory Value],
+    0
+)
+
+Days of Inventory =
+DIVIDE(
+    365,
+    [Inventory Turnover Rate],
+    0
+)
+
+Stock Coverage Days =
+[Days of Inventory]
+
+Inventory Accuracy % =
+DIVIDE(
+    CALCULATE(COUNTROWS(fact_inventory), fact_inventory[stock_level] > 0),
+    COUNTROWS(fact_inventory),
+    0
+) * 100
+
+Understock Items Count =
+CALCULATE(
+    COUNTROWS(fact_inventory),
+    fact_inventory[stock_level] < fact_inventory[reorder_point]
+)
+
+Overstock Items Count =
+CALCULATE(
+    COUNTROWS(fact_inventory),
+    fact_inventory[stock_level] > fact_inventory[safety_stock_level] * 5
+)
+
+Inventory Value by Product =
+CALCULATE(
+    [Inventory Value],
+    ALLEXCEPT(dim_product, dim_product[product_name])
+)
+
+Stock Level by Product =
+CALCULATE(
+    [Current Stock Level],
+    ALLEXCEPT(dim_product, dim_product[product_name])
+)
+
+
+// ============================================================
+// ██████╗  SHIPMENT
+// ============================================================
+
+Total Shipments =
+COUNTROWS(fact_shipment)
+
+Total Quantity Shipped =
+SUM(fact_shipment[quantity])
+
+Delivered Quantity =
+CALCULATE(
+    SUM(fact_shipment[quantity]),
+    fact_shipment[status] = "Delivered"
+)
+
+In Transit Shipments =
+CALCULATE(
+    COUNTROWS(fact_shipment),
+    fact_shipment[status] = "In Transit"
+)
+
+Delayed Shipments =
+CALCULATE(
+    COUNTROWS(fact_shipment),
+    fact_shipment[status] = "Delayed"
+)
+
+Delivered Shipments Count =
+CALCULATE(
+    COUNTROWS(fact_shipment),
+    fact_shipment[status] = "Delivered"
+)
+
+On-Time Delivery % =
+DIVIDE(
+    [Delivered Shipments Count],
+    [Total Shipments],
+    0
+) * 100
+
+Total Shipping Cost =
+SUM(fact_shipment[shipping_cost])
+
+Avg Shipping Cost per Shipment =
+DIVIDE(
+    [Total Shipping Cost],
+    [Total Shipments],
+    0
+)
+
+Delivery Score =
+AVERAGE(fact_shipment[delivery_performance_score])
+
+Shipment Cost by Carrier =
+CALCULATE(
+    [Total Shipping Cost],
+    ALLEXCEPT(fact_shipment, fact_shipment[carrier])
+)
+
+Delivered Shipments by Carrier =
+CALCULATE(
+    [Delivered Shipments Count],
+    ALLEXCEPT(fact_shipment, fact_shipment[carrier])
+)
+
+Delayed Shipments by Carrier =
+CALCULATE(
+    [Delayed Shipments],
+    ALLEXCEPT(fact_shipment, fact_shipment[carrier])
+)
+
+In Transit Qty =
+CALCULATE(
+    SUM(fact_shipment[quantity]),
+    fact_shipment[status] = "In Transit"
+)
+
+Shipment Cost by Channel =
+CALCULATE(
+    [Total Shipping Cost],
+    ALLEXCEPT(dim_customer, dim_customer[channel_type])
+)
+
+Delivered Shipments by Channel =
+CALCULATE(
+    [Delivered Shipments Count],
+    ALLEXCEPT(dim_customer, dim_customer[channel_type])
+)
+
+Total Weight Shipped (kg) =
+SUM(fact_shipment[total_weight_kg])
+
+Shipment Cost by Customer =
+CALCULATE(
+    [Total Shipping Cost],
+    ALLEXCEPT(dim_customer, dim_customer[customer_name])
+)
+
+
+// ============================================================
+// ██████╗  SALES PERFORMANCE
+// ============================================================
+
+Total Quantity Sold =
+SUM(fact_sales[quantity_sold])
+
+Revenue Growth YoY =
+VAR CurrentYear =
+    CALCULATE(
+        [Total Revenue],
+        DATESYTD(dim_date[date])
+    )
+VAR PrevYear =
+    CALCULATE(
+        [Total Revenue],
+        DATEADD(DATESYTD(dim_date[date]), -1, YEAR)
+    )
+RETURN
+    DIVIDE(CurrentYear - PrevYear, PrevYear, 0) * 100
+
+Revenue Growth MoM =
+VAR CurrentMonth =
+    CALCULATE(
+        [Total Revenue],
+        DATESMTD(dim_date[date])
+    )
+VAR PrevMonth =
+    CALCULATE(
+        [Total Revenue],
+        DATEADD(DATESMTD(dim_date[date]), -1, MONTH)
+    )
+RETURN
+    DIVIDE(CurrentMonth - PrevMonth, PrevMonth, 0) * 100
+
+Revenue by Customer =
+CALCULATE(
+    [Total Revenue],
+    ALLEXCEPT(dim_customer, dim_customer[customer_name])
+)
+
+Revenue by Category =
+CALCULATE(
+    [Total Revenue],
+    ALLEXCEPT(dim_product, dim_product[category])
+)
+
+Profit by Category =
+CALCULATE(
+    [Total Profit],
+    ALLEXCEPT(dim_product, dim_product[category])
+)
+
+Profit by Product =
+CALCULATE(
+    [Total Profit],
+    ALLEXCEPT(dim_product, dim_product[product_name])
+)
+
+Revenue by Month =
+CALCULATE(
+    [Total Revenue],
+    ALLEXCEPT(dim_date, dim_date[month_name], dim_date[year])
+)
+
+Profit by Month =
+CALCULATE(
+    [Total Profit],
+    ALLEXCEPT(dim_date, dim_date[month_name], dim_date[year])
+)
+
+Revenue Growth YoY by Customer =
+VAR CurrRev =
+    CALCULATE(
+        [Total Revenue],
+        dim_date[year] = YEAR(TODAY())
+    )
+VAR PrevRev =
+    CALCULATE(
+        [Total Revenue],
+        dim_date[year] = YEAR(TODAY()) - 1
+    )
+RETURN
+    DIVIDE(CurrRev - PrevRev, PrevRev, 0) * 100
+
+Discount Rate by Category =
+CALCULATE(
+    DIVIDE(
+        SUMX(fact_sales, fact_sales[discount_amount]),
+        SUMX(fact_sales, fact_sales[gross_revenue]),
+        0
+    ) * 100,
+    ALLEXCEPT(dim_product, dim_product[category])
+)
+
+Total Revenue by Channel =
+CALCULATE(
+    [Total Revenue],
+    ALLEXCEPT(dim_customer, dim_customer[channel_type])
+)
+
+Average Profit Margin by Product =
+CALCULATE(
+    AVERAGE(fact_sales[profit_margin_pct]),
+    ALLEXCEPT(dim_product, dim_product[product_name])
+)
+
+
+// ============================================================
+// ██████╗  EXECUTIVE KPI CARDS
+// ============================================================
+
+Total Revenue (Formatted) =
+FORMAT([Total Revenue] / 1000000000, "0.00") & "bn"
+
+Total Profit (Formatted) =
+FORMAT([Total Profit] / 1000000000, "0.00") & "bn"
+
+Profit Margin (Formatted) =
+FORMAT([Profit Margin %] * 100, "0.0") & "%"
+
+Cost Ratio (Formatted) =
+FORMAT([Cost Ratio %], "0.00")
+
+Perfect Order Rate % =
+[On-Time Delivery %]
+
+Cash Cycle Days =
+VAR AvgInventoryDays = [Days of Inventory]
+VAR AvgReceivableDays = 30
+VAR AvgPayableDays = 45
+RETURN
+    AvgInventoryDays + AvgReceivableDays - AvgPayableDays
+
+iTotal Revenue =
+[Total Revenue]
+
+Total Units Supplied (Supplier) =
+[Total Order Quantity]
+
+Total Units Supplied (Manufacturer) =
+[Total Units Produced]
+
+Total Units Supplied (Shipment) =
+[Total Quantity Shipped]
+
+Total Units Supplied (Sales) =
+[Total Quantity Sold]
+
+
+// ============================================================
+// ██████╗  SUPPLIER DASHBOARD SPECIFIC
+// ============================================================
+
+Supplier by Lead Time =
+CALCULATE(
+    AVERAGE(fact_procurement[lead_time_days]),
+    ALLEXCEPT(dim_supplier, dim_supplier[supplier_name])
+)
+
+Procurement Cost by Supplier =
+CALCULATE(
+    [Total Procurement Cost],
+    ALLEXCEPT(dim_supplier, dim_supplier[supplier_name])
+)
+
+Order Qty by Supplier =
+CALCULATE(
+    [Total Order Quantity],
+    ALLEXCEPT(dim_supplier, dim_supplier[supplier_name])
+)
+
+Revenue by Product Category (Donut) =
+CALCULATE(
+    [Total Revenue],
+    ALLEXCEPT(dim_product, dim_product[category])
+)
+
+Profit by Product Category (Donut) =
+CALCULATE(
+    [Total Profit],
+    ALLEXCEPT(dim_product, dim_product[category])
+)
+
+Detail Table Total Cost =
+CALCULATE(
+    [Total Procurement Cost],
+    ALLEXCEPT(dim_product, dim_product[product_name])
+)
+
+Detail Table Avg Lead Time =
+CALCULATE(
+    AVERAGE(fact_procurement[lead_time_days]),
+    ALLEXCEPT(dim_product, dim_product[product_name])
+)
+
+Detail Table Order Qty =
+CALCULATE(
+    [Total Order Quantity],
+    ALLEXCEPT(dim_product, dim_product[product_name])
+)
+
+
+// ============================================================
+// ██████╗  INVENTORY DASHBOARD SPECIFIC
+// ============================================================
+
+Inventory Turnover % =
+DIVIDE([Total Cost (Sales)], [Inventory Value], 0) * 100
+
+Days of Inventory (Formatted) =
+FORMAT([Days of Inventory], "0.00")
+
+Stock Level vs Safety Stock =
+[Current Stock Level] - [Total Safety Stock]
+
+Stock Level vs Reorder Point =
+[Current Stock Level] - [Total Reorder Point]
+
+Overstock Flag =
+IF(
+    [Current Stock Level] > [Total Safety Stock] * 3,
+    "Overstock",
+    IF(
+        [Current Stock Level] < [Total Reorder Point],
+        "Understock",
+        "Normal"
+    )
+)
+
+
+// ============================================================
+// ██████╗  TIME INTELLIGENCE
+// ============================================================
+
+Revenue MTD =
+CALCULATE(
+    [Total Revenue],
+    DATESMTD(dim_date[date])
+)
+
+Revenue YTD =
+CALCULATE(
+    [Total Revenue],
+    DATESYTD(dim_date[date])
+)
+
+Revenue QTD =
+CALCULATE(
+    [Total Revenue],
+    DATESQTD(dim_date[date])
+)
+
+Profit MTD =
+CALCULATE(
+    [Total Profit],
+    DATESMTD(dim_date[date])
+)
+
+Profit YTD =
+CALCULATE(
+    [Total Profit],
+    DATESYTD(dim_date[date])
+)
+
+Procurement Cost MTD =
+CALCULATE(
+    [Total Procurement Cost],
+    DATESMTD(dim_date[date])
+)
+
+Procurement Cost YTD =
+CALCULATE(
+    [Total Procurement Cost],
+    DATESYTD(dim_date[date])
+)
+
+Units Produced MTD =
+CALCULATE(
+    [Total Units Produced],
+    DATESMTD(dim_date[date])
+)
+
+Shipment Cost MTD =
+CALCULATE(
+    [Total Shipping Cost],
+    DATESMTD(dim_date[date])
+)
+
+Revenue Same Period Last Year =
+CALCULATE(
+    [Total Revenue],
+    SAMEPERIODLASTYEAR(dim_date[date])
+)
+
+Profit Same Period Last Year =
+CALCULATE(
+    [Total Profit],
+    SAMEPERIODLASTYEAR(dim_date[date])
+)
+
+
+// ============================================================
+// ██████╗  RELATIONSHIP / MODEL NOTES
+// ============================================================
+//
+// REQUIRED RELATIONSHIPS in Power BI Model View:
+//
+// fact_sales[date_key]              → dim_date[date_key]         (Many-to-One)
+// fact_sales[product_id]            → dim_product[product_id]    (Many-to-One)
+// fact_sales[customer_id]           → dim_customer[customer_id]  (Many-to-One)
+//
+// fact_procurement[order_date_key]  → dim_date[date_key]         (Many-to-One)
+// fact_procurement[product_id]      → dim_product[product_id]    (Many-to-One)
+// fact_procurement[supplier_id]     → dim_supplier[supplier_id]  (Many-to-One)
+//
+// fact_production[date_key]         → dim_date[date_key]         (Many-to-One)
+// fact_production[product_id]       → dim_product[product_id]    (Many-to-One)
+// fact_production[facility_id]      → dim_facility[facility_id]  (Many-to-One)
+//
+// fact_inventory[date_key]          → dim_date[date_key]         (Many-to-One)
+// fact_inventory[product_id]        → dim_product[product_id]    (Many-to-One)
+// fact_inventory[facility_id]       → dim_facility[facility_id]  (Many-to-One)
+//
+// fact_shipment[ship_date_key]      → dim_date[date_key]         (Many-to-One)
+// fact_shipment[product_id]         → dim_product[product_id]    (Many-to-One)
+// fact_shipment[customer_id]        → dim_customer[customer_id]  (Many-to-One)
+// fact_shipment[facility_id]        → dim_facility[facility_id]  (Many-to-One)
+//
+// NOTE: For Time Intelligence (DATESMTD, DATESYTD, etc.) to work,
+//       mark dim_date as a "Date Table" in Power BI using the [date] column.
+//
+// ============================================================
