@@ -1,0 +1,17 @@
+facility_id,facility_key,facility_name,country,city,facility_type,specialization,annual_capacity
+1,FAC-KR-GUM-P1,Gumi Manufacturing 1,South Korea,Gumi,Manufacturing,Smartphone,850000
+2,FAC-VN-TNG-P1,Thai Nguyen Plant,Vietnam,Thai Nguyen,Manufacturing,Mobile Assembly,1500000
+3,FAC-KR-GUM-P3,Gumi Appliance Plant,South Korea,Gumi,Manufacturing,Appliances,320000
+4,WH-US-NJ-DC1,New Jersey DC,USA,Cranbury,Warehouse,North America,500000
+5,WH-EU-PL-DC1,Poland DC,Poland,Warsaw,Warehouse,Europe,520000
+6,WH-IN-MUM-DC1,Mumbai DC,India,Mumbai,Warehouse,India,550000
+7,FAC-VN-BCG-P1,Bac Giang Plant,Vietnam,Bac Giang,Manufacturing,Mobile Assembly,2000000
+8,FAC-KR-TJG-P1,Tangjieong Plant,South Korea,Tangjieong,Manufacturing,Appliances,750000
+9,FAC-BR-CAM-P1,Campinas Plant,Brazil,Campinas,Manufacturing,Consumer Electronics,1200000
+10,FAC-IN-NOI-P1,Noida Plant,India,Noida,Manufacturing,Smartphone,1800000
+11,FAC-KR-GUM-P2,Gumi Plant 2,South Korea,Gumi,Manufacturing,Semiconductor,900000
+12,FAC-VN-GUM-P1,Gumi Plant 1,South Korea,Gumi,Manufacturing,Mobile Assembly,1600000
+13,FAC-US-NJD-DC,New Jersey DC 2,USA,New Jersey,Distribution,Electronics,500000
+14,FAC-PL-POL-DC,Warsaw DC,Poland,Warsaw,Distribution,Electronics,400000
+15,FAC-SG-SIN-DC,Singapore DC,Singapore,Singapore,Distribution,Consumer Electronics,600000
+16,FAC-AE-DXB-DC,Dubai DC,UAE,Dubai,Distribution,Consumer Electronics,350000

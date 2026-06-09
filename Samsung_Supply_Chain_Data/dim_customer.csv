@@ -1,0 +1,17 @@
+customer_id,customer_key,customer_name,country,channel_type,size,annual_volume_usd
+1,CUST-US-AMZ-001,Amazon.com Inc.,USA,Online,Large,1200000000
+2,CUST-US-BBY-001,Best Buy Co. Inc.,USA,Retailer,Large,850000000
+3,CUST-EU-MMK-001,MediaMarkt Saturn,Germany,Retailer,Large,450000000
+4,CUST-IN-FLP-001,Flipkart,India,Online,Large,420000000
+5,CUST-KR-SSD-001,Samsung Direct Store,South Korea,Direct,Large,650000000
+6,CUST-CN-JDC-001,JD.com Inc.,China,Online,Large,1100000000
+7,CUST-US-TGT-001,Target Corporation,USA,Retailer,Large,780000000
+8,CUST-US-WMT-001,Walmart Inc.,USA,Retailer,Large,950000000
+9,CUST-FR-CAR-001,Carrefour SA,France,Retailer,Large,520000000
+10,CUST-UK-CUR-001,Currys plc,UK,Retailer,Medium,380000000
+11,CUST-KR-SSS-001,Samsung Store,South Korea,Direct,Large,620000000
+12,CUST-IN-RLD-001,Reliance Digital,India,Retailer,Large,430000000
+13,CUST-JP-YOD-001,Yodobashi Camera,Japan,Retailer,Medium,310000000
+14,CUST-EU-EUR-001,Euronics Group,Germany,Retailer,Medium,290000000
+15,CUST-UK-AMS-001,Amazon UK,UK,Online,Large,870000000
+16,CUST-DE-SAT-001,Saturn GmbH,Germany,Retailer,Medium,260000000

@@ -1,0 +1,23 @@
+product_id,product_key,product_name,category,product_line,spec,color,unit_price,unit_cost,weight_kg,Img
+1,SM-S928UZKAXAA,Galaxy S24 Ultra,Smartphone,Galaxy S,512GB,Phantom Black,1299.99,899.99,0.21,https://i.ibb.co/9Hv19S22/s24-Ultra.webp
+2,SM-S921ULVAXAA,Galaxy S24,Smartphone,Galaxy S,256GB,Cobalt Violet,849.99,594.99,0.18,https://i.ibb.co/gMJgXrhG/s24.webp
+3,SM-S911UCEAXAA,Galaxy S23,Smartphone,Galaxy S,128GB,Cream,699.99,489.99,0.17,https://i.ibb.co/tPH2nTkP/s23.webp
+4,SM-F946UZKAXAA,Galaxy Z Fold5,Smartphone,Galaxy Z,512GB,Phantom Black,1919.99,1343.99,0.22,https://i.ibb.co/tPnpz3yp/Folf5.webp
+5,SM-F731UZKAXAA,Galaxy Z Flip5,Smartphone,Galaxy Z,256GB,Graphite,999.99,699.99,0.22,https://i.ibb.co/kgXHN1Nh/fold-5-2.webp
+6,SM-X916UZAAXAA,Galaxy Tab S9 Ultra,Tablet,Tab S,512GB,Graphite,1319.99,923.99,0.67,https://i.ibb.co/HDYmTQ8b/a54.webp
+7,SM-X810NZAAXAR,Galaxy Tab S9,Tablet,Tab S,256GB,Graphite,899.99,629.99,0.47,https://i.ibb.co/F4br0pKx/a34.webp
+8,SM-X115NZAAXAR,Galaxy Tab A9,Tablet,Tab A,64GB,Graphite,219.99,153.99,0.56,https://i.ibb.co/v6MTK3p6/s9.webp
+9,QN85QN90DAFXZA,"Neo QLED 85"" 4K",Television,Neo QLED,85 inch,Black,3299.99,2144.99,15.89,https://i.ibb.co/Xf1xx78G/tab-s9-ultra.webp
+10,QN65S90DAFXZA,"OLED 65"" 4K",Television,OLED,65 inch,Black,2299.99,1494.99,21.56,https://i.ibb.co/p67NdXxW/tab-a9.webp
+11,UN65CU8000FXZA,"Crystal UHD 65""",Television,Crystal UHD,65 inch,Black,649.99,422.49,30.16,https://i.ibb.co/MDMdXTmG/q-85.webp
+12,RF28T5A01SR/AA,Family Hub Refrigerator,Appliance,Refrigerator,28 cu ft,Stainless Steel,3299.99,2144.99,52.65,https://i.ibb.co/KzKrmT0s/q-75.webp
+13,WF50A8800AV/US,Smart Front Load Washer,Appliance,Washer,5.0 cu ft,Brushed Black,1299.99,844.99,69.88,https://i.ibb.co/mw7XszY/q-65.webp
+14,SM-R960NZKAXAA,Galaxy Watch6 Classic,Wearable,Watch,47mm,Black,429.99,300.99,0.06,https://i.ibb.co/nsB3JCLs/Crystal-UHD-55.webp
+15,SM-R510NZAAXAR,Galaxy Buds2 Pro,Wearable,Earbuds,Standard,Graphite,229.99,160.99,0.06,https://i.ibb.co/N2MSq6ZX/Family-Hub-Refrigerator.webp
+16,TV-QLED75-4K-001,"QLED 75"" 4K",Television,QLED,4K HDR,Black,2499.99,1749.99,25.0,https://i.ibb.co/placeholder/qled75.webp
+17,TV-QLED85-4K-001,"QLED 85"" 4K",Television,QLED,4K HDR,Black,3499.99,2449.99,35.0,https://i.ibb.co/placeholder/qled85.webp
+18,HA-DISH-BLT-001,Built-in Dishwasher,Appliance,Home Appliance,60cm,Silver,899.99,629.99,45.0,https://i.ibb.co/placeholder/dishwasher.webp
+19,TV-CUH55-001,"Crystal UHD 55""",Television,Crystal UHD,4K HDR,Black,699.99,489.99,18.0,https://i.ibb.co/placeholder/cuhdtv.webp
+20,SM-A546BLBAXFE,Galaxy A54,Smartphone,Galaxy A,256GB,Awesome Black,449.99,314.99,0.2,https://i.ibb.co/placeholder/a54.webp
+21,SM-A346MZKAXFE,Galaxy A34,Smartphone,Galaxy A,128GB,Graphite,349.99,244.99,0.19,https://i.ibb.co/placeholder/a34.webp
+22,HA-FRF-FH-001,Front Load Washer,Appliance,Home Appliance,9kg,White,1199.99,839.99,80.0,https://i.ibb.co/placeholder/washer.webp
